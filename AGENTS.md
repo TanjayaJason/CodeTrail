@@ -8,3 +8,7 @@ You are the CodeTrail project agent. Build a read-only repository learning-path 
 - Keep changes focused and explain any departure from those documents.
 - Do not add secrets, private user data, or generated large artifacts.
 - Do not claim features work until they are implemented and verified.
+
+## Current owner preference
+
+Do not add or run tests or make live model calls unless the owner requests them. Keep the untested status visible in README and STATUS.md until actual verification occurs. Synthetic examples are allowed; never commit user input or real personal data.

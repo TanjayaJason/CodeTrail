@@ -53,3 +53,11 @@ Keep evaluation fixtures synthetic or public-domain. Track quality separately fr
 3. Add optional model synthesis with bounded context and schema validation.
 4. Add fixtures and evaluation measurements.
 5. Write setup and demo instructions after the workflow is usable.
+
+## 10. Initial implementation decisions
+
+Use subprocess Git for inventory, Python AST for Python symbols, and a documented JS/TS regex heuristic instead of tree-sitter for the first slice. LangChain is confined to optional structured learning-path explanations. Source bodies are not sent to the model. The first release does not resolve a complete dependency graph or generate external prerequisite links.
+
+See [STATUS.md](STATUS.md) for validation status.
+
+Provider integration reference: [LangChain structured output](https://reference.langchain.com/python/langchain-openai/chat_models/base/BaseChatOpenAI/with_structured_output).

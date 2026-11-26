@@ -1,55 +1,96 @@
 # CodeTrail
 
-> A guided learning path through an unfamiliar codebase.
+### Find your first step in any codebase.
 
-New contributors often do not know which files, concepts, and execution paths to study first in an unfamiliar repository.
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![Status](https://img.shields.io/badge/status-initial_implementation-orange)
+![Validation](https://img.shields.io/badge/runtime-not_tested-lightgrey)
 
-## Why this project
+A local repository map and learning-path generator. It inspects tracked text files without executing project code, then orders a short reading route for your learning goal.
 
-Developers onboarding to open-source projects, students learning from code, and maintainers creating contributor guides.
+> **Portfolio release:** initial implementation. Runtime, dependencies, and model behavior have not been tested. The commands below describe intended usage, not verified results.
 
-CodeTrail is a portfolio project focused on a narrow, demonstrable workflow: useful AI assistance with visible evidence, predictable limits, and a clear local-first story.
+## What you can explore
 
-## Product snapshot
+| Capability | Implementation |
+|---|---|
+| Repository scope | Git-tracked text files, current ignore rules, and path containment |
+| Static map | Python functions/classes/imports and basic JS/TS declarations |
+| Learning route | README and manifests first, then entry points and goal-related files |
+| AI mode | Sends selected metadata only; validates returned file and symbol line anchors |
+| Read-only operation | No imports, installation, hooks, or execution of target project code |
 
-- **Input:** Local repository path, optional learning goal (for example: understand API routing).
-- **Output:** Repository map, learning steps, prerequisite links, referenced files/symbols, and suggested exploration questions.
-- **MVP:** Scan a local Git repository, map its entry points and key modules, and generate an ordered learning path with file and symbol references plus short explanations.
+## How it fits together
 
-## Planned architecture
+```mermaid
+flowchart LR
+    A[Local Git repository] --> B[Tracked files and ignore rules]
+    B --> C[Python AST and JS/TS heuristics]
+    C --> D[Goal-aware reading order]
+    D --> E[Local learning path]
+    D --> F[Optional LLM explanations]
+    F --> G[Validate file and line references]
+```
 
-Discover repository metadata and ignore rules first. Build a bounded index of tracked text files, symbols, imports, and project instructions. Select a small set of files for the chosen learning goal. Generate a structured learning path with every step tied to file/symbol anchors. Validate all paths against the repository and label inferred relationships. Default to local-only mode; remote model use must be explicit.
+## Quick start
 
-## Current status
+Use Python 3.11 or newer. Run from the repository root. Git is also required for CodeTrail.
 
-**Planning scaffold.** The product requirements, design, project skill, and agent guidance are in place. Application implementation has not started.
+```powershell
+git clone https://github.com/TanjayaJason/CodeTrail.git
+cd CodeTrail
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -e ".[ai]"
+Copy-Item .env.example .env
+```
 
-## Getting started
+Skip the copy if `.env` already exists. On macOS/Linux, activate with `source .venv/bin/activate` and copy with `cp .env.example .env`.
 
-The MVP is planned for Python 3.11+. Clone this repository and review the product and design docs before implementation. Runtime setup instructions will be added with the first working release.
+```powershell
+codetrail .
+codetrail D:\PageProof --goal "Understand PDF retrieval"
+codetrail . --json
+```
 
-For local LLM configuration, copy the variable names from .env and add your own values. .env is intentionally ignored by Git; never commit API keys.
+## Optional AI mode
 
-## Roadmap
+Fill `OPENAI_API_KEY` and `OPENAI_MODEL` in your local `.env`. Set `OPENAI_BASE_URL` only when using a compatible endpoint. The endpoint must support tool/function calling. Installing the AI extra does not enable model calls: opt in with `--ai` or the PageProof sidebar toggle.
 
-1. Implement the smallest end-to-end MVP described in the PRD.
-2. Add representative fixtures and quality checks.
-3. Document setup, limitations, and a short demo.
-4. Revisit optional integrations only when they solve a demonstrated need.
+```powershell
+codetrail . --goal "Understand command routing" --ai
+```
 
-## Safety and privacy
+Provider calls use a 45-second timeout and no automatic retries. Invalid structured responses are rejected. No API keys are included in this repository.
 
-Prompt injection in source comments/docs, large repositories, unsupported languages, inaccurate dependency maps, and exposing private code to external APIs.
+## Limits you should know
 
-The design defaults to local processing where practical and minimizes what is sent to external model providers. Do not use real sensitive data in examples or screenshots.
+Git must be available. At most 5,000 tracked paths, 100 KB per file, and two MB of selected text. Hidden paths, generated/vendor directories, symlinks, unsupported formats, and ignored files are skipped. Python analysis uses AST; JS/TS uses regex and is incomplete. Learning order and relationships are inferred, not a runtime dependency graph. AI sees file paths and symbol/import names, which can still reveal private project metadata.
 
-## Project documents
+User input is treated as evidence, never executable instructions. Model output remains advisory. Keep private documents, logs, datasets, repositories, and generated reports out of Git; `data/`, `reports/`, and `.env` are ignored.
 
-- [Product requirements](docs/PRD.md)
-- [Technical design](docs/DESIGN.md)
-- [Project skill](.agents/skills/codetrail/SKILL.md)
-- [Agent guidance](AGENTS.md)
+## Repository guide
 
-## License
+```text
+src/codetrail/
+  core.py          Domain logic and evidence handling
+  cli.py           Command-line entry point
+  support.py       Bounded input and optional provider boundary
+docs/
+  PRD.md           Product scope and acceptance goals
+  DESIGN.md        Architecture and implementation decisions
+  STATUS.md        Delivery and validation status
+.agents/skills/codetrail/SKILL.md
+AGENTS.md          Guidance for future coding work
+.env.example       Empty configuration template
+```
 
-License not selected yet.
+## Where this goes next
+
+- Resolve local imports into navigation links.
+- Add tree-sitter for richer TypeScript support.
+- Evaluate learning routes against small public example repositories.
+
+## Project notes
+
+Read the [PRD](docs/PRD.md), [design](docs/DESIGN.md), and [delivery status](docs/STATUS.md) for scope and tradeoffs. This release intentionally has no evaluation results or benchmark claims. A license has not been selected; no broad reuse rights are implied.
